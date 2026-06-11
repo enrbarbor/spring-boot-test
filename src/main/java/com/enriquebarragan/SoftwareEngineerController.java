@@ -1,33 +1,36 @@
 package com.enriquebarragan;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/softwareEngineer")
+@RequestMapping("/api/softwareEngineer")
 @AllArgsConstructor
 public class SoftwareEngineerController {
 
     private final SoftwareEngineerService softwareEngineerService;
 
     @GetMapping
-    public List<SoftwareEngineer> getSoftwareEngineers() {
-        return softwareEngineerService.getAllSoftwareEngineers();
+    public ResponseEntity<List<SoftwareEngineerDTO>> getSoftwareEngineers() {
+        return ResponseEntity.ok(softwareEngineerService.getAllSoftwareEngineers());
     }
 
     @GetMapping("{id}")
-    public SoftwareEngineer getSoftwareEngineerById(
+    public ResponseEntity<SoftwareEngineerDTO> getSoftwareEngineerById(
             @PathVariable Integer id) {
-        return softwareEngineerService.getAllSoftwareEngineersById(id);
+        return ResponseEntity.ok(softwareEngineerService.getAllSoftwareEngineersById(id));
     }
 
     @PostMapping
-    public void addNewSoftwareEngineer(
-            @RequestBody SoftwareEngineerDTO request) {
-        softwareEngineerService.insertSoftwareEngineer(request);
+    public ResponseEntity<SoftwareEngineerDTO> addNewSoftwareEngineer(
+            @RequestBody @Valid SoftwareEngineerDTO request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(softwareEngineerService.insertSoftwareEngineer(request));
     }
 
     @DeleteMapping("{id}")
@@ -38,9 +41,9 @@ public class SoftwareEngineerController {
     }
 
     @PutMapping("{id}")
-    public void updateSoftwareEngineer(
+    public ResponseEntity<SoftwareEngineerDTO> updateSoftwareEngineer(
             @PathVariable Integer id,
-            @RequestBody SoftwareEngineerDTO request) {
-        softwareEngineerService.updateSoftwareEngineer(id, request);
+            @RequestBody @Valid SoftwareEngineerDTO request) {
+        return ResponseEntity.ok(softwareEngineerService.updateSoftwareEngineer(id, request));
     }
 }
